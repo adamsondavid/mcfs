@@ -9,6 +9,6 @@ RUN gradle --no-daemon buildServer
 
 FROM azul/zulu-openjdk:21-jre
 WORKDIR /app
-COPY --from=build /build/dist/ ./
+COPY --from=build /build/build/dist/ ./
 EXPOSE 25565
 ENTRYPOINT ["java", "-jar", "spigot.jar", "nogui"]
