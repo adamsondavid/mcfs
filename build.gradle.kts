@@ -34,6 +34,7 @@ tasks.register("buildServer") {
                 commandLine("java", "-jar", "BuildTools.jar", "--rev", spigotVersion)
             }
             file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("dist/spigot-$spigotVersion.jar"))
+            file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("dist/spigot.jar"))
         }
         //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("dist/plugins/${rootProject.name}-$version.jar"), true)
     }
