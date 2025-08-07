@@ -23,13 +23,13 @@ tasks.register("buildSpigot") {
     group = "server"
     description = "downloads spigot's BuildTools.jar and builds a spigot server executable"
     doLast {
-        if (!file("build/spigot/spigot-$spigotVersion.jar").exists()) {
+        if (!file("spigot/spigot-$spigotVersion.jar").exists()) {
             download.run {
                 src("https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar")
-                dest("build/spigot/BuildTools.jar")
+                dest("spigot/BuildTools.jar")
             }
             exec {
-                workingDir("build/spigot")
+                workingDir("spigot")
                 commandLine("java", "-jar", "BuildTools.jar", "--rev", spigotVersion)
             }
         }
@@ -42,8 +42,8 @@ tasks.register("buildServer") {
     dependsOn("buildSpigot", "shadowJar")
     doLast {
         file("server").copyRecursively(File("build/dist"), true)
-        file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("build/dist/spigot.jar"), true)
-        //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/dist/plugins/${rootProject.name}-$version.jar"), true)
+        file("spigot/spigot-$spigotVersion.jar").copyTo(File("build/server/spigot.jar"), true)
+        //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/server/plugins/${rootProject.name}-$version.jar"), true)
     }
 }
 
@@ -51,8 +51,8 @@ tasks.register("run", JavaExec::class) {
     group = "server"
     description = "Runs the built server"
     dependsOn("buildServer")
-    workingDir = file("build/dist")
-    classpath = files("build/dist/spigot.jar")
+    workingDir = file("build/server")
+    classpath = files("build/server/spigot.jar")
     jvmArgs = listOf("-DIReallyKnowWhatIAmDoingISwear")
     args = listOf("nogui")
 }
