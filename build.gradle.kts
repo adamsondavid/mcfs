@@ -41,7 +41,7 @@ tasks.register("buildServer") {
     description = "Builds the server that contains of the spigot server executable, the plugin and config"
     dependsOn("buildSpigot", "shadowJar")
     doLast {
-        file("server").copyRecursively(File("build/dist"), true)
+        file("server").copyRecursively(File("build/server"), true)
         file("spigot/spigot-$spigotVersion.jar").copyTo(File("build/server/spigot.jar"), true)
         //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/server/plugins/${rootProject.name}-$version.jar"), true)
     }
