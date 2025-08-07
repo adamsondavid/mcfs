@@ -35,7 +35,7 @@ tasks.register("buildServer") {
             }
             file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("dist/spigot-$spigotVersion.jar"))
         }
-        file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("dist/plugins/${rootProject.name}-$version.jar"), true)
+        //file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("dist/plugins/${rootProject.name}-$version.jar"), true)
     }
 }
 
