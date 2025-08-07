@@ -19,13 +19,11 @@ repositories {
 dependencies {
 }
 
-tasks.register("buildServer") {
-    group = "build"
-    description = "Builds the dist directory containing a runnable spigot server with the plugin"
-    dependsOn("shadowJar")
+tasks.register("buildSpigot") {
+    group = "server"
+    description = "downloads spigot's BuildTools.jar and builds a spigot server executable"
     doLast {
-        file("server").copyRecursively(File("build/dist"), true)
-        if (!file("build/dist/spigot-$spigotVersion.jar").exists()) {
+        if (!file("build/spigot/spigot-$spigotVersion.jar").exists()) {
             download.run {
                 src("https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar")
                 dest("build/spigot/BuildTools.jar")
@@ -34,19 +32,27 @@ tasks.register("buildServer") {
                 workingDir("build/spigot")
                 commandLine("java", "-jar", "BuildTools.jar", "--rev", spigotVersion)
             }
-            file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("build/dist/spigot-$spigotVersion.jar"))
-            file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("build/dist/spigot.jar"))
         }
+    }
+}
+
+tasks.register("buildServer") {
+    group = "server"
+    description = "Builds the server that contains of the spigot server executable, the plugin and config"
+    dependsOn("buildSpigot", "shadowJar")
+    doLast {
+        file("server").copyRecursively(File("build/dist"), true)
+        file("build/spigot/spigot-$spigotVersion.jar").copyTo(File("build/dist/spigot.jar"), true)
         //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/dist/plugins/${rootProject.name}-$version.jar"), true)
     }
 }
 
-tasks.register("dev", JavaExec::class) {
-    group = "run"
+tasks.register("run", JavaExec::class) {
+    group = "server"
     description = "Runs the built server"
     dependsOn("buildServer")
-    workingDir = file("dist")
-    classpath = files("build/dist/spigot-$spigotVersion.jar")
+    workingDir = file("build/dist")
+    classpath = files("build/dist/spigot.jar")
     jvmArgs = listOf("-DIReallyKnowWhatIAmDoingISwear")
     args = listOf("nogui")
 }

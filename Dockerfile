@@ -4,6 +4,7 @@ ENV GRADLE_USER_HOME=/home/gradle/.gradle
 COPY build.gradle.kts settings.gradle.kts gradle.properties ./
 COPY gradle ./gradle
 RUN gradle --no-daemon dependencies
+RUN gradle --no-daemon buildSpigot
 COPY . .
 RUN gradle --no-daemon buildServer
 
