@@ -7,7 +7,7 @@ RUN gradle --no-daemon dependencies
 COPY . .
 RUN gradle --no-daemon buildServer
 
-FROM amazoncorretto:21-alpine-jvm
+FROM azul/zulu-openjdk:21-jre
 WORKDIR /app
 COPY --from=build /build/dist/ ./
 EXPOSE 25565
