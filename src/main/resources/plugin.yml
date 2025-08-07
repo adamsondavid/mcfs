@@ -1,0 +1,4 @@
+name: $name
+version: $version
+main: io.github.adamsondavid.Main
+api-version: 1.21

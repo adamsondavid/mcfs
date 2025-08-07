@@ -14,9 +14,19 @@ val spigotVersion = "1.21.8"
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
 }
 
 dependencies {
+    compileOnly("org.spigotmc:spigot-api:$spigotVersion-R0.1-SNAPSHOT")
+}
+
+tasks {
+    processResources {
+        filesMatching("plugin.yml") {
+            expand("name" to project.name, "version" to project.version)
+        }
+    }
 }
 
 tasks.register("buildSpigot") {
@@ -43,7 +53,7 @@ tasks.register("buildServer") {
     doLast {
         file("server").copyRecursively(File("build/server"), true)
         file("spigot/spigot-$spigotVersion.jar").copyTo(File("build/server/spigot.jar"), true)
-        //TODO: uncomment once plugin is working file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/server/plugins/${rootProject.name}-$version.jar"), true)
+        file("build/libs/${rootProject.name}-$version-all.jar").copyTo(File("build/server/plugins/${rootProject.name}-$version.jar"), true)
     }
 }
 
