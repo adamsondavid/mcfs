@@ -2,3 +2,10 @@ name: $name
 version: $version
 main: io.github.adamsondavid.Main
 api-version: 1.21
+commands:
+  read:
+    description: Reads a file and writes its contents to stdout
+    usage: /<command> <inode>
+  write:
+    description: Writes a message from stdin to stdout
+    usage: /<command> <inode> <message>

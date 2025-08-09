@@ -3,6 +3,8 @@ package io.github.adamsondavid
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.command.Command
+import org.bukkit.command.CommandSender
 import org.bukkit.plugin.java.JavaPlugin
 import kotlin.math.abs
 
@@ -12,9 +14,25 @@ class Main : JavaPlugin() {
     override fun onEnable() {
         this.world = super.server.getWorld("world")!!
         logger.info("plugin loaded")
+    }
 
-        writeFile(0, "hello world".toByteArray().asSequence())
-        println(String(readFile(0).toList().toByteArray()))
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        try {
+            if (command.name == "read") {
+                val inode =
+                    args.getOrNull(0)?.toIntOrNull() ?: throw IllegalArgumentException("invalid argument: inode")
+                sender.sendMessage(String(readFile(inode).toList().toByteArray()))
+            }
+            if (command.name == "write") {
+                val inode =
+                    args.getOrNull(0)?.toIntOrNull() ?: throw IllegalArgumentException("invalid argument: inode")
+                writeFile(inode, args.sliceArray(1 until args.size).joinToString(" ").toByteArray().asSequence())
+            }
+            return true
+        } catch (e: Exception) {
+            sender.sendMessage(e.message)
+            return false
+        }
     }
 
     fun readFile(inode: Int): Sequence<Byte> {
