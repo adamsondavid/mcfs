@@ -38,7 +38,7 @@ class Main : JavaPlugin() {
     fun readFile(inode: Int): Sequence<Byte> {
         val fileSize = readInt(inode, 0)
         return sequence {
-            for (address in 4..<fileSize + 4) yield(readByte(inode, address))
+            for (address in 0..<fileSize) yield(readByte(inode, address + 4))
         }
     }
 
@@ -59,10 +59,10 @@ class Main : JavaPlugin() {
     }
 
     fun readInt(inode: Int, address: Int): Int {
-        return (readByte(inode, address + 3).toInt() shl 24) or
-                (readByte(inode, address + 2).toInt() shl 16) or
-                (readByte(inode, address + 1).toInt() shl 8) or
-                (readByte(inode, address + 0).toInt())
+        return ((readByte(inode, address + 3).toInt() and 0xFF) shl 24) or
+                ((readByte(inode, address + 2).toInt() and 0xFF) shl 16) or
+                ((readByte(inode, address + 1).toInt() and 0xFF) shl 8) or
+                (readByte(inode, address + 0).toInt() and 0xFF)
     }
 
     fun getBlock(inode: Int, address: Int): Block {
@@ -80,7 +80,7 @@ class Main : JavaPlugin() {
     }
 
     fun writeByte(inode: Int, address: Int, value: Byte) {
-        getBlock(inode, address).type = materialArray[value.toInt()]
+        getBlock(inode, address).type = materialArray[value.toInt() and 0xff]
     }
 
     fun readByte(inode: Int, address: Int): Byte {
