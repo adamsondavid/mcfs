@@ -13,7 +13,6 @@ class Main : JavaPlugin() {
 
     override fun onEnable() {
         this.world = super.server.getWorld("world")!!
-        logger.info("plugin loaded")
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
